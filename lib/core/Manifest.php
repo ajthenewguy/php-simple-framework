@@ -122,18 +122,3 @@ class Manifest {
 		return $this->manifest;
 	}
 }
-
-class PhpFileFilter extends RecursiveFilterIterator {
-    
-	public function __construct($iterator) {
-    	parent::__construct($iterator);
-    }
-
-    public function accept() {
-    	return $this->current()->isFile() && preg_match("/\.php$/ui", $this->current()->getFilename());
-    }
-
-    public function __toString() {
-    	return $this->current()->getFilename();
-    }
-}

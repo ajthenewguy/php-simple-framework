@@ -39,10 +39,10 @@ class Document extends Singleton {
 								Node::create('nav',
 									Node::create('ul',
 										Node::create('li',
-											Node::create('a')->property('href', '#')->content('Home')
+											Node::create('a')->property('href', '?page=home')->content('Home')
 										)->property('class', 'link'),
 										Node::create('li',
-											Node::create('a')->property('href', '#')->content('Contact')
+											Node::create('a')->property('href', '?page=contact')->content('Contact')
 										)->property('class', 'link')
 									)
 								)->property('class', 'primary')
