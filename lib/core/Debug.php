@@ -37,7 +37,8 @@ class Debug {
 		$return = '';
 		$header = array();
 		$data = array();
-		$Table = new Table(array(), false, array('border' => 1, 'width' => 200));
+		$Table = new Table();
+		$Table->properties(array('border' => 1, 'width' => 200));
 		foreach($metadata as $meta) {
 			switch (strtolower($meta)) {
 				case 'time':
@@ -56,7 +57,7 @@ class Debug {
 			}
 		}
 		$Table->setHeader($header);
-		$Table->push($data);
+		$Table->setBody($data);
 		return $Table;
 	}
 }

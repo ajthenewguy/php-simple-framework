@@ -7,7 +7,7 @@ define('CACHE_PATH', BASE_PATH.DIRECTORY_SEPARATOR.'cache');
 define('LIBRARY_PATH', __DIR__);
 define('VENDOR_PATH', LIBRARY_PATH.DIRECTORY_SEPARATOR.'vendor');
 define('CHECKSUM_FILE', 'checksum.md5');
-define('CHECK_SUM', true);
+define('CHECK_SUM', false);
 
 if(is_readable(realpath('../').DIRECTORY_SEPARATOR.'_config.php')) {
 	include(realpath('../').DIRECTORY_SEPARATOR.'_config.php');
@@ -35,6 +35,8 @@ function __autoload($className) {
 	$path = $Manifest->getClassPath($className);
 	if(!is_null($path)) {
 		require_once($path);
+	} else {
+		die('Class '.$className.' not found. <a href="?flush=1">Flush</a>');
 	}
 }
 

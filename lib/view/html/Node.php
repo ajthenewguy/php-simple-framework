@@ -47,15 +47,73 @@ class Node extends Object {
 		return $this;
 	}
 	
+	public function push() {
+		$args  = func_get_args();
+		
+		switch(count($args)) {
+			case 0:
+				throw new InvalidArgumentException(__CLASS__.'::push() expects 1 or more arguments.');
+			break;
+			case 1:
+				$content = $args[0];
+				if(is_object($content)) {
+					$this->content[] = $content;
+				} else {
+					$this->content[] = $content;
+				}
+			break;
+			default:
+				for($i = 0; $i < count($args); $i++) {
+					$content = $args[$i];
+					if(is_object($content)) {
+						$this->content[] = $content;
+					} else {
+						$this->content[] = $content;
+					}
+				}
+			break;
+		}
+	}
+	
+	public function unshift() {
+		$args  = func_get_args();
+		
+		switch(count($args)) {
+			case 0:
+				throw new InvalidArgumentException(__CLASS__.'::unshift() expects 1 or more arguments.');
+			break;
+			case 1:
+				$content = $args[0];
+				if(is_object($content)) {
+					array_unshift($this->content, $content);
+				} else {
+					array_unshift($this->content, $content);
+				}
+			break;
+			default:
+				for($i = 0; $i < count($args); $i++) {
+					$content = $args[$i];
+					if(is_object($content)) {
+						array_unshift($this->content, $content);
+					} else {
+						array_unshift($this->content, $content);
+					}
+				}
+			break;
+		}
+	}
+	
 	public function content() {
 		$args  = func_get_args();
 		if(empty($args)) {
 			return $this->get_content();
 		} else {
+			$this->content = array();
+			
 			if(count($args) == 1) {
 				$content = $args[0];
 				if(is_object($content)) {
-					$this->content[] = clone $content;
+					$this->content[] = $content;
 				} else {
 					$this->content[] = $content;
 				}
@@ -63,7 +121,7 @@ class Node extends Object {
 				for($i = 0; $i < count($args); $i++) {
 					$content = $args[$i];
 					if(is_object($content)) {
-						$this->content[] = clone $content;
+						$this->content[] = $content;
 					} else {
 						$this->content[] = $content;
 					}
@@ -81,8 +139,7 @@ class Node extends Object {
 		
 		if(is_array($this->content)) {
 			foreach($this->content as $content) {
-				$content = $this->render_node($content);
-				$return[] = $content;
+				$return[] = $this->render_node($content);
 			}
 		} else {
 			$return[] = $this->content;
@@ -254,7 +311,7 @@ class Node extends Object {
 		return $out;
 	}
 	
-	private function Children($tag = null) {
+	public function Children($tag = null) {
 		if(is_null($tag)) {
 			return $this->content;
 		} else {
@@ -272,6 +329,18 @@ class Node extends Object {
 				return $found;
 			}
 		}
+		return null;
+	}
+	
+	public function getChild($tag) {
+		foreach($this->content as $content) {
+			if($content instanceof Node) {
+				if($tag == $content->tag) {
+					return $content;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public function __get($name) {

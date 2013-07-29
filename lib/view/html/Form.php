@@ -21,8 +21,9 @@ class Form extends Node {
 		$this->name = $name;
 		if(NULL === $id) $id = $name;
 		parent::__construct('form', array('id' => $id, 'name' => $name, 'action' => $action, 'method' => $method), true);
-		$hidden_name_element = new Node('input', array('type' => 'hidden', 'name' => 'form', 'value' => $name), false);
-		$this->content($hidden_name_element);
+		$this->push(
+			new Node('input', array('type' => 'hidden', 'name' => 'form', 'value' => $name), false)
+		);
 	}
 	
 	/**
@@ -47,7 +48,8 @@ class Form extends Node {
 		$properties = array_merge($properties, array('name' => $name, 'type' => $type));
 		
 		if($type == 'file') {
-			$this->property( 'enctype', 'multipart/form-data' );
+			$this->property('enctype', 'multipart/form-data');
+			//$this->add_hidden(ini_get("session.upload_progress.name"), $value = '123');
 		}
 		
 		switch($type) {
@@ -89,7 +91,7 @@ class Form extends Node {
 			break;
 		}
 		
-		$this->content( $this->Fields[$name] );
+		$this->push( $this->Fields[$name] );
 		
 		
 		return $this->Fields[$name];
@@ -99,7 +101,7 @@ class Form extends Node {
 		$properties = array_merge($properties, array('name' => $name, 'type' => 'hidden', 'value' => $value));
 		
 		$this->Fields[$name] = new FormField($name, 'hidden', $properties);
-		$this->content( $this->Fields[$name] );
+		$this->push( $this->Fields[$name] );
 		
 		return $this->Fields[$name];
 	}

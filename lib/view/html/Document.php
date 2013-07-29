@@ -33,9 +33,6 @@ class Document extends Singleton {
 					Node::create('body',
 						Node::create('header',
 							Node::create('div',
-								Node::create('a',
-									Node::create('h1')->content('Allen')
-								)->properties(array('href' => '#', 'class' => 'brand')),
 								Node::create('nav',
 									Node::create('ul',
 										Node::create('li',
@@ -48,7 +45,10 @@ class Document extends Singleton {
 								)->property('class', 'primary')
 							)->property('class', 'inner')
 						)->property('class', 'header'),
-						Node::create('article'),
+						Node::create('article',
+							Node::create('h1'),
+							Node::create('div')->property('id', 'content')
+						),
 						Node::create('aside')
 					)
 				);

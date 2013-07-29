@@ -140,9 +140,9 @@ body {
     background: #161616;
 }
 	.header .inner {
-	    padding-top: 45px;
+	    padding-top: 5px;
 	    position: relative;
-	    min-height: 72px;
+	    min-height: 30px;
 	}
 
 	/* Brand */
@@ -224,12 +224,12 @@ body {
 	}
 	.header .primary ul {
 		position:absolute;
-		bottom:0;
+		bottom:-13;
 		right:0; /* positions the main navigation */
 	}
 	.header .primary li {
 	    float: left;
-	    padding-bottom: 14px;
+	    padding-bottom: 2px;
 	    margin: 0 5px;
 	    position: relative;
 	    white-space: nowrap; /* forces text to never wrap onto a second line */

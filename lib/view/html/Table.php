@@ -25,18 +25,31 @@ class Table extends Node {
 	}
 	
 	public function setHeader($data) {
-		$thead = new Node('thead');
+		$thead = $this->thead();
 		$tr = new Node('tr');
 		foreach($data as $key => $col) {
 			$properties = array();
-			if($key == $this->getCols()-1) { // last column's cell
+			/*if($key == $this->getCols()-1) { // last column's cell
 				$properties['colspan'] = $this->getCols() - count($data) + 1;
-			}
+			}*/
 			$td = new Node('td', $properties);
-			$tr->content($td->content($col));
+			$tr->push($td->content($col));
 		}
-		
-		$this->content($thead->content($tr));
+		$thead->content($tr);
+	}
+	
+	public function setBody($data) {
+		$tbody = $this->tbody();
+		$tr = new Node('tr');
+		foreach($data as $key => $col) {
+			$properties = array();
+			/*if($key == $this->getCols()-1) { // last column's cell
+				$properties['colspan'] = $this->getCols() - count($data) + 1;
+			}*/
+			$td = new Node('td', $properties);
+			$tr->push($td->content($col));
+		}
+		$tbody->content($tr);
 	}
 	
 	public function setData($data = array()) {
@@ -46,22 +59,62 @@ class Table extends Node {
 			$data = array($data);
 		}
 		if(is_array($data)) {
-			$tbody = new Node('tbody');
 			foreach($data as $row) {
-				$tr = new Node('tr');
-				if(!is_array($row)) $row = array($row);
-				foreach($row as $key => $col) {
-					$properties = array();
-					if($key == $this->getCols()-1) { // last column's cell
-						$properties['colspan'] = $this->getCols() - count($row) + 1;
-					}
-					$td = new Node('td', $properties);
-					$tr->content($td->content($col));
-				}
-				$tbody->content($tr);
+				$this->push_row($row);
 			}
-			$this->content($tbody);
 		}
+	}
+	
+	public function push_row() {
+		$args  = func_get_args();
+		$row = $args[0];
+		$new = false;
+		$tbody = $this->tbody();
+		$tr = Node::create('tr');
+		if(!is_array($row)) $row = array($row);
+		foreach($row as $key => $col) {
+			$properties = array();
+			if($key == $this->getCols()-1) { // last column's cell
+				$properties['colspan'] = $this->getCols() - count($row) + 1;
+			}
+			$td = new Node('td', $properties);
+			$td->content($col);
+			$tr->push($td);
+		}
+		$tbody->push($tr);
+		return $this;
+	}
+	
+	public function thead() {
+		$thead = $this->getChild('thead');
+		if(is_null($thead)) {
+			$thead = new Node('thead');
+			$this->unshift($thead);
+		}
+		return $thead;
+	}
+	
+	public function tbody() {
+		$tbody = $this->getChild('tbody');
+		if(is_null($tbody)) {
+			$tbody = new Node('tbody');
+			$this->push($tbody);
+		}
+		return $tbody;
+	}
+	
+	public function tfoot() {
+		$tfoot = $this->getChild('tfoot');
+		if(is_null($tfoot)) {
+			$tfoot = new Node('tfoot');
+			$this->push($tfoot);
+		}
+		return $tfoot;
+	}
+
+
+	public function clear() {
+		$this->thead()->content(array());
 	}
 	
 	public function getCols() {
@@ -90,36 +143,6 @@ class Table extends Node {
 			}
 		}
 		return $this->rows;
-	}
-	
-	public function push($row) {
-		$new = false;
-		if(!$tbody = $this->tbody()) {
-			$new = true;
-			$tbody = new Node('tbody');
-		}
-		$tr = Node::create('tr');
-		if(!is_array($row)) $row = array($row);
-		foreach($row as $key => $col) {
-			$properties = array();
-			if($key == $this->getCols()-1) { // last column's cell
-				$properties['colspan'] = $this->getCols() - count($row) + 1;
-			}
-			$td = new Node('td', $properties);
-			$tr->content($td->content($col));
-		}
-		$tbody->content($tr);
-		if($new) {
-			$this->content($tbody);
-		}
-	}
-	
-	public function clear() {
-		$this->data = array();
-	}
-	
-	public function __toString() {
-		return $this->render();
 	}
 }
 
