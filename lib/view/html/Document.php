@@ -24,25 +24,17 @@ class Document extends Singleton {
 		
 		switch($this->type) {
 			case self::TYPE_HTML:
+				
 				$this->Html = Node::create('html',
 					Node::create('head',
 						Node::create('meta')->property('charset', 'utf-8'),
-						Node::create('title')->content('Allen\'s Website'),
+						Node::create('title'),
 						Node::create('link')->properties(array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => 'css/layout.css'))
 					),
 					Node::create('body',
 						Node::create('header',
 							Node::create('div',
-								Node::create('nav',
-									Node::create('ul',
-										Node::create('li',
-											Node::create('a')->property('href', '?page=home')->content('Home')
-										)->property('class', 'link'),
-										Node::create('li',
-											Node::create('a')->property('href', '?page=contact')->content('Contact')
-										)->property('class', 'link')
-									)
-								)->property('class', 'primary')
+								Node::create('nav')->property('class', 'primary')
 							)->property('class', 'inner')
 						)->property('class', 'header'),
 						Node::create('article',
@@ -52,17 +44,47 @@ class Document extends Singleton {
 						Node::create('aside')
 					)
 				);
-
+				
+				if(!empty($this->pages)) {
+					$this->Html->body()->header()->div(/*'.inner*/)->nav(/*'.primary'*/)->content(Node::create('ul'));
+					foreach($this->pages as $page_slug => $page) {
+						$this->Html->body()->header()->div(/*'.inner*/)->nav(/*'.primary'*/)->ul()->push(
+							Node::create('li',
+								Node::create('a')->property('href', '?page='.$page_slug)->content($page['Title'])
+							)
+						);
+					}
+				}
 			break;
 		}
 		
 		parent::__construct($properties);
 	}
 	
+	public function Pages($pages = false) {
+		if(false !== $pages) {
+			$this->pages = $pages;
+			if(!empty($this->pages)) {
+				$this->Html->body()->header()->div(/*'.inner*/)->nav(/*'.primary'*/)->content(Node::create('ul'));
+				foreach($this->pages as $page_slug => $page) {
+					$this->Html->body()->header()->div(/*'.inner*/)->nav(/*'.primary'*/)->ul()->push(
+						Node::create('li',
+							Node::create('a')
+							->property('href', '?page='.$page_slug)
+							->content($page['Title'])
+						)->property('class', (isset($this->slug) && $page_slug == $this->slug ? 'current' : 'page'))
+					);
+				}
+			}
+		}
+		return $this->pages;
+	}
+	
 	public function Title($value = false) {
 		if(false !== $value) {
 			$this->Title = $value;
-			$this->Html->head()->title()->content($this->Title);
+			$this->Html->head()->title()->content($value);
+			$this->Html->body()->article()->h1()->content(Node::create('h1', $value));
 		}
 		return $this->Title;
 	}
@@ -72,6 +94,13 @@ class Document extends Singleton {
 			$this->Html->content($value);
 		}	
 		return $this->Html;
+	}
+	
+	public function Content($value = false) {
+		if(false !== $value) {
+			$this->Html->body()->article()->div()->push($value);
+		}
+		return $this->Html->body()->article()->div();
 	}
 	
 	public function __toString() {

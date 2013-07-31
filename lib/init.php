@@ -9,6 +9,8 @@ define('VENDOR_PATH', LIBRARY_PATH.DIRECTORY_SEPARATOR.'vendor');
 define('CHECKSUM_FILE', 'checksum.md5');
 define('CHECK_SUM', false);
 
+date_default_timezone_set('America/Los_Angeles');
+
 if(is_readable(realpath('../').DIRECTORY_SEPARATOR.'_config.php')) {
 	include(realpath('../').DIRECTORY_SEPARATOR.'_config.php');
 } elseif(is_readable(realpath('./').DIRECTORY_SEPARATOR.'_config.php')) {
@@ -16,15 +18,24 @@ if(is_readable(realpath('../').DIRECTORY_SEPARATOR.'_config.php')) {
 }
 if(!isset($database)) {
 	$database = array(
-		'driver' => 'mysql'
+		'driver' => 'mysql',
+		'host' => 'localhost',
+		'username' => 'root',
+		'password' => '',
+		'database' => 'phpSimpleFramework'
 	);
 }
 if(!empty($database)) {
-	///
+	define('DB_HOST', $database['host']);
+	define('DB_USER', $database['username']);
+	define('DB_PASS', $database['password']);
+	define('DB_NAME', $database['database']);
 }
 
 // Include manifest
 include(BASE_PATH.'/lib/core/Manifest.php');
+include(BASE_PATH.'/lib/function/filesystem.php');
+include(BASE_PATH.'/lib/function/utility.php');
 include(BASE_PATH.'/lib/function/init.php');
 include(BASE_PATH.'/lib/function/http.php');
 $FLUSH = isset($_GET['flush']);
