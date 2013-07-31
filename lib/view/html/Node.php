@@ -73,6 +73,11 @@ class Node extends Object {
 				}
 			break;
 		}
+		return $this;
+	}
+	
+	public function prepend() {
+		return $this->unshift(func_get_args());
 	}
 	
 	public function unshift() {
@@ -101,6 +106,7 @@ class Node extends Object {
 				}
 			break;
 		}
+		return $this;
 	}
 	
 	public function content() {
