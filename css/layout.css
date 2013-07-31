@@ -251,7 +251,7 @@ body {
 	}
 	.header .primary li.section:after,
 	.header .primary li.current:after {
-	    content: '}'; /* adds triangle beneath current nav item ('}' is renders as a triangle when WebSymbolsRegular is set as the font) */
+	    /*content: '}';  adds triangle beneath current nav item ('}' is renders as a triangle when WebSymbolsRegular is set as the font) */
 	    display: block;
 	    position: absolute;
 	    left: 50%;
